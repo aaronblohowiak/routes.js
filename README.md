@@ -99,6 +99,13 @@ The `Router()` that `routes` exposes has two functions: `addRoute` and `match`.
 
 `pathToRegExp`: takes a `path` string and an empty array, `keys`.  Returns a RegExp and populates `keys` with the names of the match groups that the RegExp will match. This is largely an internal function but is provided in case someone wants to make a nifty string -> [RegExp, keys] utility.
 
+
+## Test
+
+Clone the repo, cd to it and:
+
+`make test`
+
 ## Credits
 
 This library is an extraction and re-factor of the `connect` `router` middleware.  I found that connect-based routing worked reasonably well on the server side, but I wanted to do similar routing based on channel names when using `Push-It` and possibly for event names when using `Evan`.  So, I extracted the relevant goodness out of the `router` middleware and presented it here.  Big thanks to TJ Holowaychuk for writing the original `router` middleware.
