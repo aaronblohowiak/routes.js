@@ -1,147 +1,167 @@
-
-var localRoutes = [];
-
-
-/**
- * Convert path to route object
- *
- * A string or RegExp should be passed,
- * will return { re, src, keys} obj
- *
- * @param  {String / RegExp} path
- * @return {Object}
- */
- 
-var Route = function(path){
-  //using 'new' is optional
-  
-  var src, re, keys = [];
-  
-  if(path instanceof RegExp){
-    re = path;
-    src = path.toString();
-  }else{
-    re = pathToRegExp(path, keys);
-    src = path;
+(function (root, factory) {
+  /*global define:false */
+  if (typeof exports === 'object') {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like enviroments that support module.exports,
+    // like Node.
+    module.exports = factory();
+  } else if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define([], factory);
+  } else {
+    // Browser globals
+    root.returnExports = factory();
   }
+}(this, function () {
 
-  return {
-  	 re: re,
-  	 src: path.toString(),
-  	 keys: keys
-  }
-};
+  var localRoutes = [];
 
-/**
- * Normalize the given path string,
- * returning a regular expression.
- *
- * An empty array should be passed,
- * which will contain the placeholder
- * key names. For example "/user/:id" will
- * then contain ["id"].
- *
- * @param  {String} path
- * @param  {Array} keys
- * @return {RegExp}
- */
-var pathToRegExp = function (path, keys) {
-	path = path
-		.concat('/?')
-		.replace(/\/\(/g, '(?:/')
-		.replace(/(\/)?(\.)?:(\w+)(?:(\(.*?\)))?(\?)?/g, function(_, slash, format, key, capture, optional){
-			keys.push(key);
-			slash = slash || '';
-			return ''
-				+ (optional ? '' : slash)
-				+ '(?:'
-				+ (optional ? slash : '')
-				+ (format || '') + (capture || '([^/]+?)') + ')'
-				+ (optional || '');
-		})
-		.replace(/([\/.])/g, '\\$1')
-		.replace(/\*/g, '(.+)');
-	return new RegExp('^' + path + '$', 'i');
-};
 
-/**
- * Attempt to match the given request to
- * one of the routes. When successful
- * a  {fn, params, splats} obj is returned
- *
- * @param  {Array} routes
- * @param  {String} uri
- * @return {Object}
- */
-var match = function (routes, uri) {
-	var captures, i = 0;
+  /**
+   * Convert path to route object
+   *
+   * A string or RegExp should be passed,
+   * will return { re, src, keys} obj
+   *
+   * @param  {String / RegExp} path
+   * @return {Object}
+   */
 
-	for (var len = routes.length; i < len; ++i) {
-		var route = routes[i],
-		    re = route.re,
-		    keys = route.keys,
-		    splats = [],
-		    params = {};
+  var Route = function (path) {
+    //using 'new' is optional
 
-		if (captures = re.exec(uri)) {
-			for (var j = 1, len = captures.length; j < len; ++j) {
-				var key = keys[j-1],
-					val = typeof captures[j] === 'string'
-						? decodeURIComponent(captures[j])
-						: captures[j];
-				if (key) {
-					params[key] = val;
-				} else {
-					splats.push(val);
-				}
-			}
-			return {
-				params: params,
-				splats: splats,
-				route: route.src
-			};
-		}
-	}
-};
+    var src, re, keys = [];
 
-/**
- * Default "normal" router constructor.
- * accepts path, fn tuples via addRoute
- * returns {fn, params, splats, route}
- *  via match
- *
- * @return {Object}
- */
- 
-var Router = function(){
-  //using 'new' is optional
-  return {
-    routes: [],
-    routeMap : {},
-    addRoute: function(path, fn){
-      if (!path) throw new Error(' route requires a path');
-      if (!fn) throw new Error(' route ' + src + ' requires a callback');
-
-      var route = Route(path);
-      route.fn = fn;
-
-      this.routes.push(route);
-      this.routeMap[path] = fn;
-    },
-
-    match: function(pathname){
-      var route = match(this.routes, pathname);
-      if(route){
-        route.fn = this.routeMap[route.route];
-      }
-      return route;
+    if (path instanceof RegExp) {
+      re = path;
+      src = path.toString();
+    } else {
+      re = pathToRegExp(path, keys);
+      src = path;
     }
-  }
-};
 
-module.exports = {
-  Route: Route,
-  pathToRegExp: pathToRegExp,
-  match: match,
-  Router: Router
-}
+    return {
+      re: re,
+      src: path.toString(),
+      keys: keys
+    };
+  };
+
+  /**
+   * Normalize the given path string,
+   * returning a regular expression.
+   *
+   * An empty array should be passed,
+   * which will contain the placeholder
+   * key names. For example "/user/:id" will
+   * then contain ["id"].
+   *
+   * @param  {String} path
+   * @param  {Array} keys
+   * @return {RegExp}
+   */
+  var pathToRegExp = function (path, keys) {
+    /*jshint regexp:false */
+    path = path
+      .concat('/?')
+      .replace(/\/\(/g, '(?:/')
+      .replace(/(\/)?(\.)?:(\w+)(?:(\(.*?\)))?(\?)?/g, function (_, slash, format, key, capture, optional) {
+        keys.push(key);
+        slash = slash || '';
+        return '' +
+          (optional ? '' : slash) +
+          '(?:' +
+          (optional ? slash : '') +
+          (format || '') + (capture || '([^/]+?)') + ')' +
+          (optional || '');
+      })
+      .replace(/([\/.])/g, '\\$1')
+      .replace(/\*/g, '(.+)');
+    return new RegExp('^' + path + '$', 'i');
+  };
+
+  /**
+   * Attempt to match the given request to
+   * one of the routes. When successful
+   * a  {fn, params, splats} obj is returned
+   *
+   * @param  {Array} routes
+   * @param  {String} uri
+   * @return {Object}
+   */
+  var match = function (routes, uri) {
+    var captures, i = 0;
+
+    for (var rlen = routes.length; i < rlen; ++i) {
+      var route = routes[i],
+      re = route.re,
+      keys = route.keys,
+      splats = [],
+      params = {};
+
+      captures = re.exec(uri);
+      if (captures) {
+        for (var j = 1, clen = captures.length; j < clen; ++j) {
+          var key = keys[j - 1],
+          val = typeof captures[j] === 'string' ?
+            decodeURIComponent(captures[j]) :
+            captures[j];
+          if (key) {
+            params[key] = val;
+          } else {
+            splats.push(val);
+          }
+        }
+        return {
+          params: params,
+          splats: splats,
+          route: route.src
+        };
+      }
+    }
+  };
+
+  /**
+   * Default "normal" router constructor.
+   * accepts path, fn tuples via addRoute
+   * returns {fn, params, splats, route}
+   *  via match
+   *
+   * @return {Object}
+   */
+
+  var Router = function () {
+    //using 'new' is optional
+    return {
+      routes: [],
+      routeMap : {},
+      addRoute: function (path, fn) {
+        if (!path) throw new Error(' route requires a path');
+        if (!fn) throw new Error(' route ' + path + ' requires a callback');
+
+        var route = new Route(path);
+        route.fn = fn;
+
+        this.routes.push(route);
+        this.routeMap[path] = fn;
+      },
+
+      match: function (pathname) {
+        var route = match(this.routes, pathname);
+        if (route) {
+          route.fn = this.routeMap[route.route];
+        }
+        return route;
+      }
+    };
+  };
+
+  return {
+    Route: Route,
+    pathToRegExp: pathToRegExp,
+    match: match,
+    Router: Router
+  };
+}));
+
+
