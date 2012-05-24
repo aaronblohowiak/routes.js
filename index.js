@@ -1,3 +1,18 @@
+(function (root, factory) {
+  /*global define:false */
+  if (typeof exports === 'object') {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like enviroments that support module.exports,
+    // like Node.
+    module.exports = factory();
+  } else if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define([], factory);
+  } else {
+    // Browser globals
+    root.returnExports = factory();
+  }
+}(this, function () {
 
 var localRoutes = [];
 
@@ -11,12 +26,12 @@ var localRoutes = [];
  * @param  {String / RegExp} path
  * @return {Object}
  */
- 
+
 var Route = function(path){
   //using 'new' is optional
-  
+
   var src, re, keys = [];
-  
+
   if(path instanceof RegExp){
     re = path;
     src = path.toString();
@@ -112,7 +127,7 @@ var match = function (routes, uri) {
  *
  * @return {Object}
  */
- 
+
 var Router = function(){
   //using 'new' is optional
   return {
@@ -139,9 +154,12 @@ var Router = function(){
   }
 };
 
-module.exports = {
-  Route: Route,
-  pathToRegExp: pathToRegExp,
-  match: match,
-  Router: Router
-}
+  return {
+    Route: Route,
+    pathToRegExp: pathToRegExp,
+    match: match,
+    Router: Router
+  }
+}));
+
+
