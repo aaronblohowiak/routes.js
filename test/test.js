@@ -176,4 +176,25 @@ for(caseIdx in cases){
   }
 }
 
+//test exceptions
+assert.throws(
+  function() {
+    router.addRoute();
+  }
+  , /route requires a path/
+  , "expected 'route requires a path' error"
+);
+
+assertCount++;
+
+assert.throws(
+  function() {
+    router.addRoute('/');
+  }
+  , /route \/ requires a callback/
+  , "expected 'route requries a callback' error"
+);
+
+assertCount++;
+
 console.log(assertCount.toString()+ " assertions made succesfully");
