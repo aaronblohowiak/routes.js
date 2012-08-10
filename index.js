@@ -120,7 +120,7 @@ var Router = function(){
     routeMap : {},
     addRoute: function(path, fn){
       if (!path) throw new Error(' route requires a path');
-      if (!fn) throw new Error(' route ' + src + ' requires a callback');
+      if (!fn) throw new Error(' route ' + path.toString() + ' requires a callback');
 
       var route = Route(path);
       route.fn = fn;
