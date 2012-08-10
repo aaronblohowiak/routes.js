@@ -164,7 +164,7 @@ for(caseIdx in cases){
     fixture = test.testMatch[path];
     
     //save typing in fixtures
-    fixture.route = test.path;
+    fixture.route = test.path.toString(); // match gets string, so ensure same type
     deepEqual(match, fixture);
     assertCount++;
   }
