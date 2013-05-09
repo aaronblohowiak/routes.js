@@ -139,9 +139,10 @@ var Router = function(){
   }
 };
 
-module.exports = {
-  Route: Route,
-  pathToRegExp: pathToRegExp,
-  match: match,
-  Router: Router
-}
+Router.Route = Route
+Router.pathToRegExp = pathToRegExp
+Router.match = match
+// back compat
+Router.Router = Router
+
+module.exports = Router

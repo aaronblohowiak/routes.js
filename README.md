@@ -14,7 +14,8 @@ This might make it useful for things like:
 
 The full range of `Path Formats` is documented below.
 
-    var router = new require('routes').Router();
+    var Router = require('routes');
+    var router = Router();
     var noop = function(){};
 
     router.addRoute("/articles/:title?", noop);

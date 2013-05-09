@@ -1,4 +1,5 @@
-var router = new require('../index').Router();
+var Router = require("../index");
+var router = Router();
 
 var noop = function(){};
 

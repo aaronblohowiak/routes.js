@@ -1,6 +1,6 @@
 var assert = require("assert"),
-    routes = require("../index"),
-    router = new routes.Router();
+    Router = require("../index"),
+    router = Router();
 
 (function(){
   //avoid typing assert.blah all over
