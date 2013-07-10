@@ -1,48 +1,57 @@
 # Routes.js
 
-`routes` lets you easily dispatch based on url-style strings.  It comes with a default Router function that you can use to route http requests, but it also cleanly exposes the important functionality so you could also use it to perform more generic string pattern matching.
+`routes` lets you easily dispatch based on url-style strings.  It comes with a default `Router` function that you can use to route http requests, but it also cleanly exposes the important functionality so you could also use it to perform more generic string pattern matching.
 
 This might make it useful for things like:
 
-1. URI routing
-2. Cucumber-style pattern matching :)
-3. Routing messages by channel name from an MQ
-4. Dispatching hierarchical events by name
+* URI routing
+* Cucumber-style pattern matching :)
+* Routing messages by channel name from an MQ
+* Dispatching hierarchical events by name
 
 
 ## Router Example:
 
 The full range of `Path Formats` is documented below.
 
-    var Router = require('routes');
-    var router = Router();
-    var noop = function(){};
+```js
+var Router = require('routes');
+var router = Router();
+var noop = function(){};
 
-    router.addRoute("/articles/:title?", noop);
-    router.addRoute("/:controller/:action/:id.:format?", noop);
+router.addRoute("/articles/:title?", noop);
+router.addRoute("/:controller/:action/:id.:format?", noop);
 
-    console.log(router.match("/articles"));
-    console.log(router.match("/articles/never-gonna-let-you-down"));
-    console.log(router.match("/posts/show/1.json"));
+console.log(router.match("/articles"));
+console.log(router.match("/articles/never-gonna-let-you-down"));
+console.log(router.match("/posts/show/1.json"));
+
+```
 
 The output for `router.match("/posts/show/1.json")` would be:
-
-    { params: 
-       { controller: 'posts',
-         action: 'show',
-         id: '1',
-         format: 'json' },
-      splats: [],
-      route: '/:controller/:action/:id.:format?',
-      fn: [Function] }
+```js
+{
+  params: {
+    controller: 'posts',
+    action: 'show',
+    id: '1',
+    format: 'json'
+  },
+  splats: [],
+  route: '/:controller/:action/:id.:format?',
+  fn: [Function]
+}
+```
   
-In the example above, fn would be the function that was passed into the router.
+In the example above, `fn` would be the function that was passed into the router.
 
 
 I return this object instead of calling your function for you because you will likely want to add additional parameters from the current context to the function invocation. Ex:
 
-    var route = router.match("/posts/show/1.json");
-    route.fn.apply([req, res, route.params, route.splats]);
+```js
+var route = router.match("/posts/show/1.json");
+route.fn.apply([req, res, route.params, route.splats]);
+```
 
 ## Installation
 
