@@ -73,8 +73,8 @@ var pathToRegExp = function (path, keys) {
  * @param  {String} uri
  * @return {Object}
  */
-var match = function (routes, uri) {
-	var captures, i = 0;
+var match = function (routes, uri, startAt) {
+	var captures, i = startAt || 0;
 
 	for (var len = routes.length; i < len; ++i) {
 		var route = routes[i],
@@ -98,7 +98,8 @@ var match = function (routes, uri) {
 			return {
 				params: params,
 				splats: splats,
-				route: route.src
+				route: route.src,
+				next: match.bind(this, routes, uri, i + 1)
 			};
 		}
 	}
