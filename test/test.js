@@ -6,7 +6,7 @@ var assert = require("assert"),
   //avoid typing assert.blah all over
   for(k in assert){
     this[k] = assert[k];
-  }  
+  }
 })();
 
 equal(1, 1);
@@ -34,7 +34,7 @@ var cases = [
     testMatch :{
       "/lang/de":{
         fn: noop,
-        params: { 
+        params: {
           "lang":"de"
         },
         splats:[]
@@ -43,7 +43,7 @@ var cases = [
     testNoMatch: ["/lang/who", "/lang/toolong", "/lang/1"]
   },
   {
-    path: "/normal/:id", 
+    path: "/normal/:id",
     testMatch: {
       "/normal/1":{
         fn: noop,
@@ -56,7 +56,7 @@ var cases = [
     testNoMatch: ["/normal/1/updates"]
   },
   {
-    path: "/optional/:id?", 
+    path: "/optional/:id?",
     testMatch: {
       "/optional/1":{
         fn: noop,
@@ -86,7 +86,7 @@ var cases = [
       },
     testNomatch: [ "/whatever/" ]
   },
-  { 
+  {
     path: "/files/*.*",
     testMatch: {
       "/files/hi.json":{
@@ -107,8 +107,8 @@ var cases = [
     testMatch: {
       "/transitive/users/ekjnekjnfkej":  {
         fn: noop,
-        params: { 
-          "kind":"users", 
+        params: {
+          "kind":"users",
           "id":"ekjnekjnfkej",
           "method": undefined,
           "format": undefined },
@@ -116,21 +116,21 @@ var cases = [
       },
       "/transitive/users/ekjnekjnfkej/update": {
         fn: noop,
-        params: { 
-          "kind":"users", 
+        params: {
+          "kind":"users",
           "id":"ekjnekjnfkej",
           "method": "update",
           "format": undefined },
-        splats:[],        
+        splats:[],
       },
       "/transitive/users/ekjnekjnfkej/update.json": {
         fn: noop,
-        params: { 
-          "kind":"users", 
+        params: {
+          "kind":"users",
           "id":"ekjnekjnfkej",
           "method": "update",
           "format": "json" },
-        splats:[],        
+        splats:[],
       }
     },
     testNoMatch: ["/transitive/kind/", "/transitive/"]
@@ -162,13 +162,14 @@ for(caseIdx in cases){
   for(path in test.testMatch){
     match = router.match(path);
     fixture = test.testMatch[path];
-    
+
     //save typing in fixtures
     fixture.route = test.path.toString(); // match gets string, so ensure same type
+    delete match.next; // next shouldn't be compared
     deepEqual(match, fixture);
     assertCount++;
   }
-  
+
   for(noMatchIdx in test.testNoMatch){
     match = router.match(test.testNoMatch[noMatchIdx]);
     strictEqual(match, undefined);
@@ -195,6 +196,17 @@ assert.throws(
   , "expected 'route requries a callback' error"
 );
 
+assertCount++;
+
+// test next
+router.addRoute("/*?", noop);
+router.addRoute("/next/x", noop);
+var match = router.match("/next/x");
+equal(typeof match.next, "function")
+strictEqual(match.route, "/*?");
+assertCount++;
+var next = match.next();
+strictEqual(next.route, "/next/x");
 assertCount++;
 
 console.log(assertCount.toString()+ " assertions made succesfully");
