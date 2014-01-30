@@ -99,7 +99,7 @@ var match = function (routes, uri, startAt) {
 				params: params,
 				splats: splats,
 				route: route.src,
-				next: match.bind(this, routes, uri, i + 1)
+        next: i + 1
 			};
 		}
 	}
@@ -130,10 +130,11 @@ var Router = function(){
       this.routeMap[path] = fn;
     },
 
-    match: function(pathname){
-      var route = match(this.routes, pathname);
+    match: function(pathname, startAt){
+      var route = match(this.routes, pathname, startAt);
       if(route){
         route.fn = this.routeMap[route.route];
+        route.next = this.match.bind(this, pathname, route.next)
       }
       return route;
     }
