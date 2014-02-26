@@ -5,14 +5,18 @@
   "homepage": "https://github.com/aaronblohowiak/routes.js",
   "repository": "https://github.com/aaronblohowiak/routes.js.git",
   "author": "Aaron Blohowiak <aaron.blohowiak@gmail.com> (http://github.com/aaronblohowiak)",
-  "main": "index",
+  "main": "dist/routes",
   "directories": {
     "lib": "."
   },
   "scripts": {
-    "test": "make test"
+    "test": "make test",
+    "prepublish": "mkdir -p dist/ && browserify --require ./index --standalone routes > dist/routes.js"
   },
   "engines": {
     "node": "*"
+  },
+  "devDependencies": {
+    "browserify": "^3.30.4"
   }
 }
