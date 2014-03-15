@@ -146,6 +146,16 @@ var cases = [
     },
     testNoMatch: ["/123-1-1234.png", "/123-22-1234", "/123.png"]
   },
+  {
+    path: "/cat/*",
+    testMatch: {
+      "/cat/%" :{
+        fn: noop,
+        params: {},
+        splats: ['%']
+      }
+    }
+  }  
 ]
 
 //load routes
