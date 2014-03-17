@@ -50,12 +50,12 @@ I return this object instead of calling your function for you because you will l
 
 ```js
 var route = router.match("/posts/show/1.json");
-route.fn.apply([req, res, route.params, route.splats]);
+route.fn.apply(null, [req, res, route.params, route.splats]);
 ```
 
 ## Installation
 
-`npm install routes`
+    npm install routes
 
 ## Path Formats
 
@@ -101,20 +101,20 @@ The `Router()` that `routes` exposes has two functions: `addRoute` and `match`.
 
 `addRoute`: takes a `path` and a `fn`. Your `path` can match any of the formats in the "Path Formats" section.
 
-`match`: takes a `String` and returns an object that contains the named `params`, `splats`, `route` (string that was matched against), and the `fn` handler you passed in with `addRoute`
+`match`: takes a `String` or `RegExp` and returns an object that contains the named `params`, `splats`, `route` (string that was matched against), and the `fn` handler you passed in with `addRoute`
 
 ## Library API
 
-`match`: takes an array of `Routes`, and a `String`. Goes through `Routes` and returns an object for the first `Route` that matches the `String`, or 'undefined' if none is found. The result object contains `params`, `splats`, and `route`. `params` is an object containing the named matches, `splats` contains the unnamed globs ("*") and `route` contains the original string that was matched against.
+`match`: takes an array of `Routes`, and a `String`. It goes through `Routes` and returns an object for the first `Route` that matches the `String`, or `undefined` if none is found. The returned object contains `params`, `splats`, and `route`. `params` is an object containing the named matches, `splats` contains the unnamed globs ("*"), and `route` contains the original string that was matched against.
 
-`pathToRegExp`: takes a `path` string and an empty array, `keys`.  Returns a RegExp and populates `keys` with the names of the match groups that the RegExp will match. This is largely an internal function but is provided in case someone wants to make a nifty string -> [RegExp, keys] utility.
+`pathToRegExp`: takes a `path` string and an empty `keys` array, returns a RegExp and populates `keys` with the names of the match groups that the RegExp will match. This is largely an internal function but is provided in case someone wants to make a nifty string -> [RegExp, keys] utility.
 
 
 ## Test
 
-Clone the repo, cd to it and:
+Clone the repo, cd to it, and:
 
-`make test`
+    make test
 
 ## Credits
 
