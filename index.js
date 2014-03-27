@@ -60,7 +60,7 @@ var pathToRegExp = function (path, keys) {
 				+ (optional || '');
 		})
 		.replace(/([\/.])/g, '\\$1')
-		.replace(/\*/g, '(.+)');
+		.replace(/\*/g, '(.*)');
 	return new RegExp('^' + path + '$', 'i');
 };
 
