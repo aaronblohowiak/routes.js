@@ -76,6 +76,17 @@ var cases = [
     testNoMatch: ["/optional/1/blah"]
   },
   {
+    path: "/empty/*",
+     testMatch: {
+        "/empty/":{
+          fn: noop,
+          params: { },
+          splats:[""],
+        }
+      },
+    testNomatch: [ "/empty" ]
+  },
+  {
     path: "/whatever/*.*",
      testMatch: {
         "/whatever/1/2/3.js":{
