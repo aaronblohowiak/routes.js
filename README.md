@@ -39,10 +39,11 @@ The output for `router.match("/posts/show/1.json")` would be:
   },
   splats: [],
   route: '/:controller/:action/:id.:format?',
-  fn: [Function]
+  fn: [Function],
+  next: [Function]
 }
 ```
-  
+
 In the example above, `fn` would be the function that was passed into the router.
 
 
@@ -51,6 +52,43 @@ I return this object instead of calling your function for you because you will l
 ```js
 var route = router.match("/posts/show/1.json");
 route.fn.apply(null, [req, res, route.params, route.splats]);
+```
+
+## Match Continuation
+
+The object returned by `router.match` includes a `next` function you can use to continue matching against subsequent routes. Routes are evaluated in the order they are added to the router, so generally, you would add your most specific routes first and most ambiguous routes last. Using the `next` function allows you evaluate more ambiguous routes first.
+
+```js
+var Router = require('routes');
+var router = new Router();
+
+router.addRoute('/admin/*?', auth);
+router.addRoute('/admin/users', adminUsers);
+
+http.createServer(function (req, res) {
+  var path = url.parse(req.url).pathname;
+  var match = router.match(path);
+  match.fn(req, res, match);
+}).listen(1337)
+
+// authenticate the user and pass them on to
+// the next route, or respond with 403.
+function auth(req, res, match) {
+  if (checkUser(req)) {
+    match = match.next();
+    if (match) match.fn(req, res, match);
+    return;
+  }
+  res.statusCode = 403;
+  res.end()
+}
+
+// render the admin.users page
+function adminUsers(req, res, match) {
+  // send user list
+  res.statusCode = 200;
+  res.end();
+}
 ```
 
 ## Installation
@@ -78,7 +116,7 @@ Periods before optional parameters are also optional:
 Splaaaat! :
 
     "/assets/*" will match "/assets/blah/blah/blah.png" and "/assets/".
-    
+
     "/assets/*.*" will match "/assets/1/2/3.js" as splats: ["1/2/3", "js"]
 
 Mix splat with named parameters:
@@ -101,7 +139,7 @@ The `Router()` that `routes` exposes has two functions: `addRoute` and `match`.
 
 `addRoute`: takes a `path` and a `fn`. Your `path` can match any of the formats in the "Path Formats" section.
 
-`match`: takes a `String` or `RegExp` and returns an object that contains the named `params`, `splats`, `route` (string that was matched against), and the `fn` handler you passed in with `addRoute`
+`match`: takes a `String` or `RegExp` and returns an object that contains the named `params`, `splats`, `route` (string that was matched against), the `fn` handler you passed in with `addRoute`, and a `next` function which will run `match` against subsequent routes.
 
 ## Library API
 

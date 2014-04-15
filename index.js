@@ -11,12 +11,12 @@ var localRoutes = [];
  * @param  {String / RegExp} path
  * @return {Object}
  */
- 
+
 var Route = function(path){
   //using 'new' is optional
-  
+
   var src, re, keys = [];
-  
+
   if(path instanceof RegExp){
     re = path;
     src = path.toString();
@@ -73,8 +73,8 @@ var pathToRegExp = function (path, keys) {
  * @param  {String} uri
  * @return {Object}
  */
-var match = function (routes, uri) {
-	var captures, i = 0;
+var match = function (routes, uri, startAt) {
+	var captures, i = startAt || 0;
 
 	for (var len = routes.length; i < len; ++i) {
 		var route = routes[i],
@@ -98,7 +98,8 @@ var match = function (routes, uri) {
 			return {
 				params: params,
 				splats: splats,
-				route: route.src
+				route: route.src,
+				next: i + 1
 			};
 		}
 	}
@@ -112,7 +113,7 @@ var match = function (routes, uri) {
  *
  * @return {Object}
  */
- 
+
 var Router = function(){
   //using 'new' is optional
   return {
@@ -129,10 +130,11 @@ var Router = function(){
       this.routeMap[path] = fn;
     },
 
-    match: function(pathname){
-      var route = match(this.routes, pathname);
+    match: function(pathname, startAt){
+      var route = match(this.routes, pathname, startAt);
       if(route){
         route.fn = this.routeMap[route.route];
+        route.next = this.match.bind(this, pathname, route.next)
       }
       return route;
     }
