@@ -11,12 +11,12 @@ var localRoutes = [];
  * @param  {String / RegExp} path
  * @return {Object}
  */
- 
+
 var Route = function(path){
   //using 'new' is optional
-  
+
   var src, re, keys = [];
-  
+
   if(path instanceof RegExp){
     re = path;
     src = path.toString();
@@ -99,7 +99,7 @@ var match = function (routes, uri, startAt) {
 				params: params,
 				splats: splats,
 				route: route.src,
-        next: i + 1
+				next: i + 1
 			};
 		}
 	}
@@ -113,7 +113,7 @@ var match = function (routes, uri, startAt) {
  *
  * @return {Object}
  */
- 
+
 var Router = function(){
   //using 'new' is optional
   return {
