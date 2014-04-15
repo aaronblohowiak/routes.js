@@ -7,6 +7,7 @@ var router = new Routes()
 router.addRoute('/*?', staticFiles)
 router.addRoute('/admin/*?', auth)
 router.addRoute('/admin/users', adminUsers)
+router.addRoute('/*', notFound)
 
 var server = http.createServer(function (req, res) {
   var path = url.parse(req.url).pathname
@@ -15,10 +16,6 @@ var server = http.createServer(function (req, res) {
   function wrapNext(next) {
     return function() {
       var match = next()
-      if (!match) {
-        res.statusCode = 404
-        return res.end()
-      }
       match.fn(req, res, wrapNext(match.next))
     }
   }
@@ -56,6 +53,11 @@ function auth(req, res, next) {
 function adminUsers(req, res, next) {
   res.statusCode = 200
   res.end()
+}
+
+function notFound(req, res, next) {
+  res.statusCode = 404
+  return res.end()
 }
 
 
