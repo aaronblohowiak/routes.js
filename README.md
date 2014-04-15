@@ -68,27 +68,23 @@ router.addRoute('/admin/users', adminUsers);
 http.createServer(function (req, res) {
   var path = url.parse(req.url).pathname;
   var match = router.match(path);
-
-  function wrapNext(next) {
-    return function() {
-      var match = next();
-      match.fn(req, res, wrapNext(match.next));
-    }
-  }
-
-  match.fn(req, res, wrapNext(match.next));
+  match.fn(req, res, match);
 }).listen(1337)
 
 // authenticate the user and pass them on to
 // the next route, or respond with 403.
-function auth(req, res, next) {
-  if (checkUser(req)) return next();
+function auth(req, res, match) {
+  if (checkUser(req)) {
+    match = match.next();
+    if (match) match.fn(req, res, match);
+    return;
+  }
   res.statusCode = 403;
   res.end()
 }
 
 // render the admin.users page
-function adminUsers(req, res, next) {
+function adminUsers(req, res, match) {
   // send user list
   res.statusCode = 200;
   res.end();
