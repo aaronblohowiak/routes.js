@@ -95,6 +95,47 @@ function adminUsers(req, res, next) {
 }
 ```
 
+## Match Continuation
+
+The object returned by `router.match` includes a `next` function you can use to continue matching against subsequent routes. Routes are evaluated in the order they are added to the router, so generally, you would add your most specific routes first and most ambiguous routes last. Using the `next` function allows you evaluate more ambiguous routes first.
+
+```js
+var Router = require('routes');
+var router = new Router();
+
+router.addRoute('/admin/*?', auth);
+router.addRoute('/admin/users', adminUsers);
+
+http.createServer(function (req, res) {
+  var path = url.parse(req.url).pathname;
+  var match = router.match(path);
+
+  function wrapNext(next) {
+    return function() {
+      var match = next();
+      match.fn(req, res, wrapNext(match.next));
+    }
+  }
+
+  match.fn(req, res, wrapNext(match.next));
+}).listen(1337)
+
+// authenticate the user and pass them on to
+// the next route, or respond with 403.
+function auth(req, res, next) {
+  if (checkUser(req)) return next();
+  res.statusCode = 403;
+  res.end()
+}
+
+// render the admin.users page
+function adminUsers(req, res, next) {
+  // send user list
+  res.statusCode = 200;
+  res.end();
+}
+```
+
 ## Installation
 
     npm install routes
