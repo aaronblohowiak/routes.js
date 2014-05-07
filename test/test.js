@@ -166,8 +166,34 @@ var cases = [
         splats: ['%']
       }
     }
-  }  
-]
+  },
+  {
+    path: "*://*example.com/:foo/*/:bar",
+    testMatch: {
+      "http://www.example.com/the/best/test" :{
+        fn: noop,
+        params: {
+          "foo":"the",
+          "bar":"test"
+        },
+        splats: ["http","www.","best"]
+      }
+    }
+  },
+  {
+    path: "*://*example.com/:foo/*/:bar",
+    testMatch: {
+      "http://example.com/the/best/test" :{
+        fn: noop,
+        params: {
+          "foo":"the",
+          "bar":"test"
+        },
+        splats: ["http","","best"]
+      }
+    }
+  }
+];
 
 //load routes
 for(caseIdx in cases){
