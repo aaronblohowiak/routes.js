@@ -50,7 +50,12 @@ var pathToRegExp = function (path, keys) {
 	path = path
 		.concat('/?')
 		.replace(/\/\(/g, '(?:/')
-		.replace(/(\/)?(\.)?:(\w+)(?:(\(.*?\)))?(\?)?/g, function(_, slash, format, key, capture, optional){
+		.replace(/(\/)?(\.)?:(\w+)(?:(\(.*?\)))?(\?)?|\*/g, function(_, slash, format, key, capture, optional){
+			if (_ === "*"){
+				keys.push(undefined);
+				return _;
+			}
+			
 			keys.push(key);
 			slash = slash || '';
 			return ''
@@ -61,7 +66,7 @@ var pathToRegExp = function (path, keys) {
 				+ (optional || '');
 		})
 		.replace(/([\/.])/g, '\\$1')
-		.replace(/\*/g, '(.+)');
+		.replace(/\*/g, '(.*)');
 	return new RegExp('^' + path + '$', 'i');
 };
 
