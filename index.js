@@ -54,7 +54,7 @@ var pathToRegExp = function (path, keys) {
 				keys.push(undefined);
 				return _;
 			}
-			
+
 			keys.push(key);
 			slash = slash || '';
 			return ''
@@ -88,7 +88,7 @@ var match = function (routes, uri, startAt) {
 		    splats = [],
 		    params = {};
 
-		if (captures = re.exec(uri)) {
+		if (captures = uri.match(re)) {
 			for (var j = 1, len = captures.length; j < len; ++j) {
 				var key = keys[j-1],
 					val = typeof captures[j] === 'string'
