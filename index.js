@@ -134,6 +134,9 @@ var Router = function(){
       this.routes.push(route);
       this.routeMap[path] = fn;
     },
+    add: function(path, fn){
+      this.addRoute(path, fn);
+    },
 
     match: function(pathname, startAt){
       var route = match(this.routes, pathname, startAt);
