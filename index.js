@@ -12,7 +12,7 @@ var localRoutes = [];
  * @return {Object}
  */
 
-var Route = function(path){
+var Route = function(path, index){
   //using 'new' is optional
 
   var src, re, keys = [];
@@ -28,7 +28,8 @@ var Route = function(path){
   return {
   	 re: re,
   	 src: path.toString(),
-  	 keys: keys
+  	 keys: keys,
+     index: index
   }
 };
 
@@ -104,7 +105,8 @@ var match = function (routes, uri, startAt) {
 				params: params,
 				splats: splats,
 				route: route.src,
-				next: i + 1
+				next: i + 1,
+        index: route.index
 			};
 		}
 	}
@@ -120,25 +122,23 @@ var match = function (routes, uri, startAt) {
  */
 
 var Router = function(){
-  //using 'new' is optional
   return {
     routes: [],
-    routeMap : {},
+    routeMap : [],
     addRoute: function(path, fn){
       if (!path) throw new Error(' route requires a path');
       if (!fn) throw new Error(' route ' + path.toString() + ' requires a callback');
 
-      var route = Route(path);
+      var route = Route(path, this.routeMap.length);
       route.fn = fn;
-
       this.routes.push(route);
-      this.routeMap[path] = fn;
+      this.routeMap.push([path, fn]);
     },
 
     match: function(pathname, startAt){
       var route = match(this.routes, pathname, startAt);
       if(route){
-        route.fn = this.routeMap[route.route];
+        route.fn = this.routeMap[route.index][1];
         route.next = this.match.bind(this, pathname, route.next)
       }
       return route;
