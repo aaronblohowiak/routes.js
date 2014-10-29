@@ -213,6 +213,7 @@ for(caseIdx in cases){
     //save typing in fixtures
     fixture.route = test.path.toString(); // match gets string, so ensure same type
     delete match.next; // next shouldn't be compared
+    delete match.index;
     deepEqual(match, fixture);
     assertCount++;
   }
