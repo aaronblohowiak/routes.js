@@ -1,6 +1,6 @@
 # Routes.js
 
-**Warning** Using the Same path more than once results in buggy behaviour documented [here](https://github.com/aaronblohowiak/routes.js/issues/31).
+**Warning** Using the same path more than once results in buggy behaviour documented [here](https://github.com/aaronblohowiak/routes.js/issues/31).
 
 Please use the **i40** library found [here](https://www.npmjs.org/package/i40)
 
