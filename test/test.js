@@ -181,9 +181,9 @@ var cases = [
     }
   },
   {
-    path: "*://*example.com/:foo/*/:bar",
+    path: "*://*example2.com/:foo/*/:bar",
     testMatch: {
-      "http://example.com/the/best/test" :{
+      "http://example2.com/the/best/test" :{
         fn: noop,
         params: {
           "foo":"the",

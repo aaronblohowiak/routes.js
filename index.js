@@ -128,6 +128,10 @@ var Router = function(){
       if (!path) throw new Error(' route requires a path');
       if (!fn) throw new Error(' route ' + path.toString() + ' requires a callback');
 
+      if (this.routeMap[path]) {
+        throw new Error('path is already defined: ' + path);
+      }
+
       var route = Route(path);
       route.fn = fn;
 
