@@ -1,5 +1,9 @@
 # Routes.js
 
+**Warning** Using the Same path more than once results in buggy behaviour documented [here](https://github.com/aaronblohowiak/routes.js/issues/31)Please use the **i40** library found [here](https://github.com/glassresistor/routes.js/)
+
+Please use the **i40** library found [here](https://www.npmjs.org/package/i40)
+
 `routes` lets you easily dispatch based on url-style strings.  It comes with a default `Router` function that you can use to route http requests, but it also cleanly exposes the important functionality so you could also use it to perform more generic string pattern matching.
 
 This might make it useful for things like:
