@@ -9,6 +9,13 @@ This might make it useful for things like:
 * Routing messages by channel name from an MQ
 * Dispatching hierarchical events by name
 
+## Alternative routers.
+
+This module is no longer actively worked on. This module operates just fine as is,
+  however you might want to use a module that is under active maintenance:
+  
+ - https://github.com/Matt-Esch/http-hash
+ - https://github.com/glassresistor/i40
 
 ## Router Example:
 
