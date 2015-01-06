@@ -16,6 +16,7 @@ This module is no longer actively worked on. This module operates just fine as i
   
  - https://github.com/Matt-Esch/http-hash
  - https://github.com/glassresistor/i40
+ - https://github.com/bevacqua/ruta3
 
 ## Router Example:
 
