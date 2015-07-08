@@ -256,4 +256,18 @@ var next = match.next();
 strictEqual(next.route, "/next/x");
 assertCount++;
 
+// test remove
+equal(router.routes.length, 14);
+equal(Object.keys(router.routeMap).length, 14);
+router.removeRoute('/next/x');
+equal(router.routes.length, 13);
+equal(Object.keys(router.routeMap).length, 13);
+assertCount++;
+match = router.match('/next/x');
+// next still available, just returns undefined
+equal(typeof match.next, "function");
+next = match.next();
+strictEqual(next, undefined);
+assertCount++
+
 console.log(assertCount.toString()+ " assertions made succesfully");
