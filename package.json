@@ -1,7 +1,7 @@
 {
   "name": "routes",
   "description": "Minimalist route matching for javascript",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "homepage": "https://github.com/aaronblohowiak/routes.js",
   "repository": "https://github.com/aaronblohowiak/routes.js.git",
   "author": "Aaron Blohowiak <aaron.blohowiak@gmail.com> (http://github.com/aaronblohowiak)",
