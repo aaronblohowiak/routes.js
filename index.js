@@ -134,7 +134,6 @@ var Router = function(){
 
       var route = Route(path);
       route.fn = fn;
-      route.idx = this.routes.length;
 
       this.routes.push(route);
       this.routeMap[path] = fn;
@@ -146,26 +145,18 @@ var Router = function(){
         throw new Error('path does not exist: ' + path);
       }
 
-      // find route for this specific path, not necessarily the first that
-      // matches the pattern
       var match;
-      this.routes.forEach(function eachRoute(route) {
-        if (route.src === path) {
-          match = route;
-        }
-      });
+      var newRoutes = [];
 
-      if (match) {
-        this.routes.splice(match.idx, 1);
-        delete this.routeMap[path];
-
-        // re-index
-        for (var i = match.idx; i<this.routes.length; i++) {
-          this.routes[i].idx = i;
+      // copy the routes excluding the route being removed
+      for (var i = 0; i < this.routes.length; i++) {
+        var route = this.routes[i];
+        if (route.src !== path) {
+          newRoutes.push(route);
         }
-        return match;
       }
-      throw new Error('could not remove route for path: ' + path);
+      this.routes = newRoutes;
+      delete this.routeMap[path];
     },
 
     match: function(pathname, startAt){
