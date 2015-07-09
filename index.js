@@ -139,6 +139,26 @@ var Router = function(){
       this.routeMap[path] = fn;
     },
 
+    removeRoute: function(path) {
+      if (!path) throw new Error(' route requires a path');
+      if (!this.routeMap[path]) {
+        throw new Error('path does not exist: ' + path);
+      }
+
+      var match;
+      var newRoutes = [];
+
+      // copy the routes excluding the route being removed
+      for (var i = 0; i < this.routes.length; i++) {
+        var route = this.routes[i];
+        if (route.src !== path) {
+          newRoutes.push(route);
+        }
+      }
+      this.routes = newRoutes;
+      delete this.routeMap[path];
+    },
+
     match: function(pathname, startAt){
       var route = match(this.routes, pathname, startAt);
       if(route){
