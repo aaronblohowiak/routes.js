@@ -62,6 +62,35 @@ var route = router.match("/posts/show/1.json");
 route.fn.apply(null, [req, res, route.params, route.splats]);
 ```
 
+## HTTP Method Example:
+
+Here is a handy trick if you want to perform pattern matching on http methods:
+
+```
+var router = require('routes')();
+
+router.addRoute("GET /articles/:title?", function (req, res, params) {
+  // perform some IO...
+  res.end('article content goes here...\n');
+});
+router.addRoute("POST /articles/:title", function (req, res, params) {
+  // perform some IO...
+  res.setHeader('content-type', 'text/plain');
+  res.end('updated ' + params.title + '\n');
+});
+
+var http = require('http');
+var server = http.createServer(function (req, res) {
+ var m = router.match(req.method + ' ' + req.url);
+ if (m) m.fn(req, res, m.params);
+ else {
+  res.statusCode = 404;
+  res.end('not found\n');
+ }
+});
+server.listen(5000);
+```
+
 ## Match Continuation
 
 The object returned by `router.match` includes a `next` function you can use to continue matching against subsequent routes. Routes are evaluated in the order they are added to the router, so generally, you would add your most specific routes first and most ambiguous routes last. Using the `next` function allows you evaluate more ambiguous routes first.
