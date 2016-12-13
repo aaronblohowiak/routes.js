@@ -5,6 +5,7 @@
   "homepage": "https://github.com/aaronblohowiak/routes.js",
   "repository": "https://github.com/aaronblohowiak/routes.js.git",
   "author": "Aaron Blohowiak <aaron.blohowiak@gmail.com> (http://github.com/aaronblohowiak)",
+  "license": "MIT",
   "main": "dist/routes",
   "directories": {
     "lib": "."
