@@ -192,6 +192,39 @@ var cases = [
         splats: ["http","","best"]
       }
     }
+  },
+  {
+    path: "/:id([1-9]\\d*)d",
+    testMatch: {
+      "/1d": {
+        fn: noop,
+        params: {
+          id: "1"
+        },
+        splats: []
+      },
+      "/123d": {
+        fn: noop,
+        params: {
+          id: "123"
+        },
+        splats: []
+      }
+    },
+    testNoMatch: ["/0d", "/0123d", "/d1d", "/123asd"]
+  },
+  {
+    path: "/a:test(a.*z)z",
+    testMatch: {
+      "/aabcdzz": {
+        fn: noop,
+        params: {
+          test: "abcdz"
+        },
+        splats: []
+      }
+    },
+    testNoMatch: ["/abcdz", "/aaaz", "/azzz", "/az"]
   }
 ];
 
@@ -212,7 +245,7 @@ for(caseIdx in cases){
 
     //save typing in fixtures
     fixture.route = test.path.toString(); // match gets string, so ensure same type
-    delete match.next; // next shouldn't be compared
+    if (match) delete match.next; // next shouldn't be compared
     deepEqual(match, fixture);
     assertCount++;
   }
