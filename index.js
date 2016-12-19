@@ -26,9 +26,9 @@ var Route = function(path){
   }
 
   return {
-  	 re: re,
-  	 src: path.toString(),
-  	 keys: keys
+    re: re,
+    src: path.toString(),
+    keys: keys
   }
 };
 
@@ -46,27 +46,27 @@ var Route = function(path){
  * @return {RegExp}
  */
 var pathToRegExp = function (path, keys) {
-	path = path
-		.concat('/?')
-		.replace(/\/\(/g, '(?:/')
-		.replace(/(\/)?(\.)?:(\w+)(?:(\(.*?\)))?(\?)?|\*/g, function(_, slash, format, key, capture, optional){
-			if (_ === "*"){
-				keys.push(undefined);
-				return _;
-			}
+  path = path
+    .concat('/?')
+    .replace(/\/\(/g, '(?:/')
+    .replace(/(\/)?(\.)?:(\w+)(?:(\(.*?\)))?(\?)?|\*/g, function(_, slash, format, key, capture, optional){
+      if (_ === "*"){
+        keys.push(undefined);
+        return _;
+      }
 
-			keys.push(key);
-			slash = slash || '';
-			return ''
-				+ (optional ? '' : slash)
-				+ '(?:'
-				+ (optional ? slash : '')
-				+ (format || '') + (capture || '([^/]+?)') + ')'
-				+ (optional || '');
-		})
-		.replace(/([\/.])/g, '\\$1')
-		.replace(/\*/g, '(.*)');
-	return new RegExp('^' + path + '$', 'i');
+      keys.push(key);
+      slash = slash || '';
+      return ''
+        + (optional ? '' : slash)
+        + '(?:'
+        + (optional ? slash : '')
+        + (format || '') + (capture || '([^/]+?)') + ')'
+        + (optional || '');
+    })
+    .replace(/([\/.])/g, '\\$1')
+    .replace(/\*/g, '(.*)');
+  return new RegExp('^' + path + '$', 'i');
 };
 
 /**
@@ -79,35 +79,35 @@ var pathToRegExp = function (path, keys) {
  * @return {Object}
  */
 var match = function (routes, uri, startAt) {
-	var captures, i = startAt || 0;
+  var captures, i = startAt || 0;
 
-	for (var len = routes.length; i < len; ++i) {
-		var route = routes[i],
-		    re = route.re,
-		    keys = route.keys,
-		    splats = [],
-		    params = {};
+  for (var len = routes.length; i < len; ++i) {
+    var route = routes[i],
+        re = route.re,
+        keys = route.keys,
+        splats = [],
+        params = {};
 
-		if (captures = uri.match(re)) {
-			for (var j = 1, len = captures.length; j < len; ++j) {
-				var key = keys[j-1],
-					val = typeof captures[j] === 'string'
-						? unescape(captures[j])
-						: captures[j];
-				if (key) {
-					params[key] = val;
-				} else {
-					splats.push(val);
-				}
-			}
-			return {
-				params: params,
-				splats: splats,
-				route: route.src,
-				next: i + 1
-			};
-		}
-	}
+    if (captures = uri.match(re)) {
+      for (var j = 1, len = captures.length; j < len; ++j) {
+        var key = keys[j-1],
+          val = typeof captures[j] === 'string'
+            ? unescape(captures[j])
+            : captures[j];
+        if (key) {
+          params[key] = val;
+        } else {
+          splats.push(val);
+        }
+      }
+      return {
+        params: params,
+        splats: splats,
+        route: route.src,
+        next: i + 1
+      };
+    }
+  }
 };
 
 /**
