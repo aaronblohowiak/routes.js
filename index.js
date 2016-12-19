@@ -138,6 +138,9 @@ var Router = function(){
       this.routes.push(route);
       this.routeMap[path] = fn;
     },
+    add: function(path, fn){
+      this.addRoute(path, fn);
+    },
 
     removeRoute: function(path) {
       if (!path) throw new Error(' route requires a path');
