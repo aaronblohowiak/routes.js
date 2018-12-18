@@ -92,7 +92,7 @@ var match = function (routes, uri, startAt) {
 			for (var j = 1, len = captures.length; j < len; ++j) {
 				var key = keys[j-1],
 					val = typeof captures[j] === 'string'
-						? unescape(captures[j])
+						? decodeURI(captures[j])
 						: captures[j];
 				if (key) {
 					params[key] = val;
