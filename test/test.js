@@ -160,10 +160,10 @@ var cases = [
   {
     path: "/cat/*",
     testMatch: {
-      "/cat/%" :{
+      "/cat/yasmina" :{
         fn: noop,
         params: {},
-        splats: ['%']
+        splats: ['yasmina']
       }
     }
   },
